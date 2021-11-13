@@ -1,0 +1,19 @@
+#gameboard {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-content: flex-start;
+    width: 800px;
+    height: 650px;
+}
+
+.boardSpots {
+    display: flex;
+    align-items: center;
+    font-size: 140px;
+    justify-content: center;
+    color: yellow;
+    background-color: black;
+    border: solid white;
+    box-sizing: border-box;
+}
