@@ -29,7 +29,8 @@ const gameBoard = (() => {
     }
 
     return {
-        addGrid
+        addGrid,
+        createGameBoard
         };
 })();
 
@@ -64,11 +65,23 @@ const displayController = (() => {
                     tracker ++;
                 };
             };
+            // minimum 5 moves needed for there to be a winner, tracker will be at least 7
             if(tracker >= 7) {
                 let check = checkForWinner(theGameBoard);
                 if(check != false) {
+                    // print winner to window
                     let winner = document.getElementById('winner');
                     winner.textContent = check;
+
+                    // reset tracker
+                    tracker = 2;
+
+                    // add play again button, resets gameboard
+                    let playAgainButton = document.createElement('button');
+                    playAgainButton.textContent = 'Play Again';
+                    playAgainButton.addEventListener('click', function() {
+                        resetGame()});
+                    winner.appendChild(playAgainButton);
                 }
             }
         }))
@@ -161,6 +174,16 @@ const displayController = (() => {
             }
         }
         return false;
+    }
+
+    function resetGame() {
+        // clear the gameboard
+        let boardSpots = document.querySelectorAll('.boardSpots');
+        boardSpots.forEach((index) => {
+            index.textContent = '';
+        })
+        let winner = document.querySelector('#winner');
+        winner.textContent = '';
     }
 
 
