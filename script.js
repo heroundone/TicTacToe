@@ -88,6 +88,7 @@ const displayController = (() => {
     };
 
     const checkForWinner = (theGameBoard) => {
+        // checks horizontally, vertically, and diagonally
         let check = [];
         let checkH = checkHorizontal(theGameBoard);
         check.push(checkH);
@@ -99,8 +100,14 @@ const displayController = (() => {
             if(check[i] != false) {
                 return check[i];
             }
-        };  
-        return false;
+        }; 
+        // check for tie
+        if(tracker != 11) {
+            return false;
+        } 
+        else {
+            return 'TIE';
+        }
     }
 
     function checkHorizontal(theGameBoard) {
