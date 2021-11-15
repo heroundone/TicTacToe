@@ -11,8 +11,14 @@
 }
 
 .player {
+    font-size: 30px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
+}
+
+#scorekeeper {
+    font-size: 15px;
 }
 
 #gameboard {

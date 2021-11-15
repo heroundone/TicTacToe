@@ -4,6 +4,10 @@ const gameBoard = (() => {
         let newNames = Array.from(names);
         newNames.forEach(index => index.addEventListener('click', (e) => {
             updateNames(e);
+        if(Player1.updatedName != '' && Player2.updatedName != '') {
+            gameBoard.addGrid();
+            displayController.addClickToMark();
+        }
         }))
     }
     
@@ -14,24 +18,26 @@ const gameBoard = (() => {
         let id = player.getAttribute('id');
         if(name != '') {
             if(id === 'player1') {
-                const player1 = Player(name);
-                player.textContent = `${name}` + "(X's)";
+                Player1.updatedName = name;
+                let updatedName = Player1.updatedName;               
+                player.textContent = `${updatedName}` + "(X's)";
                 span.style.display = 'none';
             }
             else {
-                const player2 = Player(name);
-                player.textContent = `${name}` + "(O's)";
+                Player2.updatedName = name;
+                let updatedName = Player2.updatedName;
+                player.textContent = `${updatedName}` + "(O's)";
                 span.style.display = 'none';
             }
         }  
         else{
             if(id === 'player1') {
-                const player1 = Player('Player1');
+                Player1.updatedName = 'Player 1';
                 player.textContent = "Player 1" + "(X's)";
                 span.style.display = 'none';
             }
             else {
-                const player2 = Player('Player2');
+                Player2.updatedName = 'Player 2';
                 player.textContent = "Player 2" + "(O's)";
                 span.style.display = 'none';
             }
@@ -52,6 +58,9 @@ const gameBoard = (() => {
             let boardSpotsClone = boardSpots.cloneNode();
             theGameBoard.push(boardSpotsClone);
         };
+
+        // create scorekeeper
+        
 
         // return the array
         return theGameBoard;
@@ -108,10 +117,31 @@ const displayController = (() => {
             if(tracker >= 7) {
                 let check = checkForWinner(theGameBoard);
                 if(check != false) {
-                    // print winner to window
                     let winner = document.getElementById('winner');
                     winner.style.fontSize = '20px';
-                    winner.textContent = check;
+                    if(check === 'X has won') {
+                        let arrayCheck = check.split(' ');
+                        let newArray = arrayCheck.slice(1)
+                        newArray.unshift(Player1.updatedName);
+                        let newCheck = newArray.join(' ');
+                        winner.textContent = newCheck;
+                        Player1.wins = Player1.updateWins();
+                        console.log(Player1);
+                    }
+                    else if(check === 'O has won') {
+                        let arrayCheck = check.split(' ');
+                        let newArray = arrayCheck.slice(1);
+                        newArray.unshift(Player2.updatedName);
+                        let newCheck = newArray.join(' ');
+                        winner.textContent = newCheck;
+                        Player2.wins = Player2.updateWins();
+                    }
+                    
+                    // create scorekeeper
+                    scorekeeper = document.getElementById('scorekeeper');
+                    let player1 = Player1.updatedName;
+                    let player2 = Player2.updatedName;
+                    scorekeeper.textContent = `(${Player1.updatedName}: ${Player1.wins})` + ' ' + `(${Player2.updatedName}: ${Player2.wins})`;
 
                     // reset tracker
                     tracker = 2;
@@ -240,23 +270,18 @@ const displayController = (() => {
 })();
 
 const Player = (name) => {
+    let updatedName = '';
     let wins = 0;
-    const getName = () => name;
     const updateWins = () => {
-        wins++;
+        wins += 1;
+        return wins;
     }
 
-    return {wins, getName, updateWins};
+    return {updatedName, wins, updateWins};
 }
-
+const Player1 = Player('Player 1');
+const Player2 = Player('Player 2');
 gameBoard.addSubmitEvent();
-gameBoard.addGrid();
-displayController.addClickToMark();
-
-
-// ToDo: only start grid once both names have been submitted
-//       announcement of winner has player's name
-//       keep track of number of wins for players
 
 
 
