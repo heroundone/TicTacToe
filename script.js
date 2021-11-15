@@ -1,4 +1,42 @@
 const gameBoard = (() => {
+    const addSubmitEvent = () => {
+        let names = document.querySelectorAll('.submit');
+        let newNames = Array.from(names);
+        newNames.forEach(index => index.addEventListener('click', (e) => {
+            updateNames(e);
+        }))
+    }
+    
+    function updateNames(event) {
+        let name = event.target.previousElementSibling.value;
+        let span = event.target.parentNode;
+        let player = event.target.parentNode.previousElementSibling;
+        let id = player.getAttribute('id');
+        if(name != '') {
+            if(id === 'player1') {
+                const player1 = Player(name);
+                player.textContent = `${name}` + "(X's)";
+                span.style.display = 'none';
+            }
+            else {
+                const player2 = Player(name);
+                player.textContent = `${name}` + "(O's)";
+                span.style.display = 'none';
+            }
+        }  
+        else{
+            if(id === 'player1') {
+                const player1 = Player('Player1');
+                player.textContent = "Player 1" + "(X's)";
+                span.style.display = 'none';
+            }
+            else {
+                const player2 = Player('Player2');
+                player.textContent = "Player 2" + "(O's)";
+                span.style.display = 'none';
+            }
+        }
+    }
     const createGameBoard = () => {
         // create the gameboard elements
         let theGameBoard = [];
@@ -30,7 +68,8 @@ const gameBoard = (() => {
 
     return {
         addGrid,
-        createGameBoard
+        createGameBoard,
+        addSubmitEvent
         };
 })();
 
@@ -71,6 +110,7 @@ const displayController = (() => {
                 if(check != false) {
                     // print winner to window
                     let winner = document.getElementById('winner');
+                    winner.style.fontSize = '20px';
                     winner.textContent = check;
 
                     // reset tracker
@@ -78,6 +118,7 @@ const displayController = (() => {
 
                     // add play again button, resets gameboard
                     let playAgainButton = document.createElement('button');
+                    playAgainButton.style.marginLeft = '10px';
                     playAgainButton.textContent = 'Play Again';
                     playAgainButton.addEventListener('click', function() {
                         resetGame()});
@@ -193,12 +234,30 @@ const displayController = (() => {
         winner.textContent = '';
     }
 
-
     return {
         addClickToMark
     };
 })();
 
+const Player = (name) => {
+    let wins = 0;
+    const getName = () => name;
+    const updateWins = () => {
+        wins++;
+    }
+
+    return {wins, getName, updateWins};
+}
+
+gameBoard.addSubmitEvent();
 gameBoard.addGrid();
 displayController.addClickToMark();
+
+
+// ToDo: only start grid once both names have been submitted
+//       announcement of winner has player's name
+//       keep track of number of wins for players
+
+
+
 

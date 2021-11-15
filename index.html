@@ -9,12 +9,25 @@
     <title>Tic Tac Toe Game</title>
 </head>
 <body>
-    <div id="gameboard">
-
+    <div id="playerRecords">
+        <div class="player">
+            <p id="player1" class="name">Player 1(X's)</p>
+            <span>
+                <input class="enterName" type="text" placeholder="update name">
+                <input class="submit" type="button" value="Submit">
+            </span>
+        </div>
+        <div class="player">
+            <p id="player2" class="name">Player 2(O's)</p>
+            <span>
+                <input class="enterName" type="text" placeholder="update name">
+                <input class="submit" type="button" value="Submit">
+            </span>
+        </div>
     </div>
-    <div id="winner">
-        
+    <div id="container">
+        <div id="winner"></div>
+        <div id="gameboard"></div>
     </div>
-
 </body>
 </html>
