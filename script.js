@@ -101,7 +101,14 @@ const displayController = (() => {
         let boardspots = document.querySelectorAll('.boardSpots');
         let theGameBoard = Array.from(boardspots);
         console.log(theGameBoard);
-        theGameBoard.forEach((index) => index.addEventListener('click', () => {
+        theGameBoard.forEach(index => {
+            index.addEventListener('click', () => {
+                monitorGame(index, theGameBoard);
+            }) 
+        });
+    };
+
+    const monitorGame = (index, theGameBoard) => {
             // check if the spot has been marked, if not then go ahead and mark it
             if(index.textContent === '') {
                 if((tracker % 2) === 0) {
@@ -136,6 +143,12 @@ const displayController = (() => {
                         winner.textContent = newCheck;
                         Player2.wins = Player2.updateWins();
                     }
+                    else {
+                        winner.textContent = check;
+                    }
+
+                    // delete gameboard
+                    deleteGameBoard(theGameBoard);
                     
                     // create scorekeeper
                     scorekeeper = document.getElementById('scorekeeper');
@@ -143,19 +156,18 @@ const displayController = (() => {
                     let player2 = Player2.updatedName;
                     scorekeeper.textContent = `(${Player1.updatedName}: ${Player1.wins})` + ' ' + `(${Player2.updatedName}: ${Player2.wins})`;
 
-                    // reset tracker
-                    tracker = 2;
-
                     // add play again button, resets gameboard
                     let playAgainButton = document.createElement('button');
                     playAgainButton.style.marginLeft = '10px';
                     playAgainButton.textContent = 'Play Again';
                     playAgainButton.addEventListener('click', function() {
-                        resetGame()});
+                        // reset tracker and game
+                        tracker = 2;
+                        resetGame();
+                    });
                     winner.appendChild(playAgainButton);
-                }
-            }
-        }))
+                };
+            };
     };
 
     const checkForWinner = (theGameBoard) => {
@@ -253,13 +265,18 @@ const displayController = (() => {
         }
         return false;
     }
+    function deleteGameBoard(theGameBoard) {
+        theGameBoard.forEach(index => {
+            index.remove();
+        });
+    };
 
     function resetGame() {
-        // clear the gameboard
-        let boardSpots = document.querySelectorAll('.boardSpots');
-        boardSpots.forEach((index) => {
-            index.textContent = '';
-        })
+        // recreate the gameboard and add event listeners again
+        gameBoard.addGrid();
+        displayController.addClickToMark();
+        
+        // clear winner announcement
         let winner = document.querySelector('#winner');
         winner.textContent = '';
     }
