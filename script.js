@@ -59,13 +59,10 @@ const gameBoard = (() => {
             theGameBoard.push(boardSpotsClone);
         };
 
-        // create scorekeeper
-        
-
         // return the array
         return theGameBoard;
     };
-    
+
     const addGrid = () => {
         // create and retrieve array and create container to append to
         theGameBoard = createGameBoard();
@@ -100,33 +97,62 @@ const displayController = (() => {
     const addClickToMark = () => {
         let boardspots = document.querySelectorAll('.boardSpots');
         let theGameBoard = Array.from(boardspots);
+        let order = decideOrder(1, 2);
+        // display who goes first at top of page
+        if(order === 1) {
+            document.getElementById('goesFirst').textContent = 'Player 1 goes first!';
+        }
+        else {
+            document.getElementById('goesFirst').textContent = 'Player 2 goes first!';
+        }
+
         console.log(theGameBoard);
         theGameBoard.forEach(index => {
             index.addEventListener('click', () => {
-                monitorGame(index, theGameBoard);
+                monitorGame(index, theGameBoard, order);
             }) 
         });
     };
 
-    const monitorGame = (index, theGameBoard) => {
+    function decideOrder(min, max) {
+        return Math.round(Math.random() * (max - min) + min);
+    };
+
+    const monitorGame = (index, theGameBoard, order) => {
             // check if the spot has been marked, if not then go ahead and mark it
-            if(index.textContent === '') {
-                if((tracker % 2) === 0) {
-                    index.textContent = 'X';
-                    tracker ++;
-                }
-                else {
-                    index.textContent = 'O';
-                    tracker ++;
+            
+            if(order === 1) {
+                if(index.textContent === '') {
+                    if((tracker % 2) === 0) {
+                        index.textContent = 'X';
+                        tracker ++;
+                    }
+                    else {
+                        index.textContent = 'O';
+                        tracker ++;
+                    };
                 };
-            };
+            }
+            else {
+                if(index.textContent === '') {
+                    if((tracker % 2) === 0) {
+                        index.textContent = 'O';
+                        tracker ++;
+                    }
+                    else {
+                        index.textContent = 'X';
+                        tracker ++;
+                    };
+                };
+            }
+            
             // minimum 5 moves needed for there to be a winner, tracker will be at least 7
             if(tracker >= 7) {
                 let check = checkForWinner(theGameBoard);
                 if(check != false) {
                     let winner = document.getElementById('winner');
                     winner.style.fontSize = '20px';
-                    if(check === 'X has won') {
+                    if(check === 'X wins') {
                         let arrayCheck = check.split(' ');
                         let newArray = arrayCheck.slice(1)
                         newArray.unshift(Player1.updatedName);
@@ -135,7 +161,7 @@ const displayController = (() => {
                         Player1.wins = Player1.updateWins();
                         console.log(Player1);
                     }
-                    else if(check === 'O has won') {
+                    else if(check === 'O wins') {
                         let arrayCheck = check.split(' ');
                         let newArray = arrayCheck.slice(1);
                         newArray.unshift(Player2.updatedName);
@@ -204,10 +230,10 @@ const displayController = (() => {
             console.log(xCompareArray);
             console.log(yCompareArray);
             if(concatTestArray === xCompareArray) {
-                return 'X has won';
+                return 'X wins';
             }
             else if(concatTestArray === yCompareArray) {
-                return 'O has won';
+                return 'O wins';
             }
             else {
                 testArray.length = 0;
@@ -225,10 +251,10 @@ const displayController = (() => {
             }
             let concatTestArray = testArray.join('');
             if(concatTestArray === xCompareArray) {
-                return 'X has won';
+                return 'X wins';
             }
             else if(concatTestArray === yCompareArray) {
-                return 'O has won';
+                return 'O wins';
             }
             else {
                 testArray.length = 0;
@@ -253,10 +279,10 @@ const displayController = (() => {
             }
             let concatTestArray = testArray.join('');
             if(concatTestArray === xCompareArray) {
-                return 'X has won';
+                return 'X wins';
             }
             else if(concatTestArray === yCompareArray) {
-                return 'O has won';
+                return 'O wins';
             }
             else {
                 testArray.length = 0;
